@@ -1,3 +1,4 @@
-from django.db import models
+# Django discovers models here; they are defined in the domain layer.
+from apps.users.domain.models import UserProfile
 
-# Create your models here.
+__all__ = ["UserProfile"]

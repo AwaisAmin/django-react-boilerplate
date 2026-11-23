@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'inertia',
     'django_celery_beat',
     'apps.admin_panel',
+    'apps.users',
     'apps.system',
 ]
 
