@@ -1,6 +1,11 @@
 """Permission rules for application roles."""
 
-from apps.users.domain.roles import UserLike
+from apps.users.domain.roles import Role, UserLike
+
+
+def can_access_workspace(role: Role | None) -> bool:
+    """Every active user has a role; anonymous and inactive users have none."""
+    return role is not None
 
 
 def can_assign_roles(actor: UserLike) -> bool:

@@ -41,3 +41,10 @@ class AssignRolePolicyTests(TestCase):
     def test_only_superusers_have_a_fixed_role(self):
         self.assertTrue(policies.has_fixed_role(make_superuser()))
         self.assertFalse(policies.has_fixed_role(make_user("admin", role=Role.ADMIN)))
+
+
+class WorkspacePolicyTests(TestCase):
+    def test_every_role_but_no_role_may_access_the_workspace(self):
+        for role in Role:
+            self.assertTrue(policies.can_access_workspace(role))
+        self.assertFalse(policies.can_access_workspace(None))

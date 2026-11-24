@@ -28,3 +28,17 @@ class UserProfileConstraintTests(TestCase):
     def test_database_rejects_unknown_roles(self):
         with self.assertRaises(IntegrityError), transaction.atomic():
             make_user("bad", role="OWNER")
+
+
+class RolesForUsersTests(TestCase):
+    def test_resolves_many_users_with_one_query(self):
+        manager = make_user("m", role=Role.MANAGER)
+        new = make_user("new")
+        root = make_superuser()
+        inactive = make_user("inactive", role=Role.ADMIN, is_active=False)
+        with self.assertNumQueries(1):
+            roles = role_selectors.roles_for_users([manager, new, root, inactive])
+        self.assertEqual(
+            roles,
+            {manager.pk: Role.MANAGER, new.pk: Role.CLIENT, root.pk: Role.ADMIN, inactive.pk: None},
+        )

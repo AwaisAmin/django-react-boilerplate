@@ -3,6 +3,7 @@ from django.middleware.csrf import get_token
 from inertia import share
 
 from apps.admin_panel.services.navigation import get_admin_navigation
+from apps.users.services.workspace import get_workspace_navigation
 from main.routes import route_map
 
 
@@ -51,6 +52,7 @@ def inertia_shared_props(get_response):
             auth=lambda: get_auth_props(request),
             flash=lambda: get_flash_props(request),
             routes=route_map,
+            workspace_nav=lambda: get_workspace_navigation(actor=request.user),
             admin_nav=lambda: get_admin_navigation(actor=request.user),
         )
         return get_response(request)

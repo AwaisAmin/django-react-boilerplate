@@ -32,10 +32,16 @@ from apps.admin_panel.api.user_views import (
     user_edit,
     user_list,
 )
+from apps.users.api.role_views import user_role
+from apps.users.api.workspace_views import workspace
+
+handler403 = "main.views.permission_denied"
+handler404 = "main.views.page_not_found"
 
 urlpatterns = [
     path("", home, name="home"),
     path("django-admin/", admin.site.urls),
+    path("workspace/", workspace, name="workspace"),
     # Inertia-powered admin
     path("admin/login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
@@ -44,6 +50,7 @@ urlpatterns = [
     path("admin/users/create/", user_create, name="admin_user_create"),
     path("admin/users/<int:user_id>/edit/", user_edit, name="admin_user_edit"),
     path("admin/users/<int:user_id>/delete/", user_delete, name="admin_user_delete"),
+    path("admin/users/<int:user_id>/role/", user_role, name="admin_user_role"),
     path("admin/groups/", group_list, name="admin_groups"),
     path("admin/groups/create/", group_create, name="admin_group_create"),
     path("admin/groups/<int:group_id>/edit/", group_edit, name="admin_group_edit"),

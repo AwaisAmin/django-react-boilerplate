@@ -79,7 +79,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'main.urls'
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'admin_dashboard'
+LOGIN_REDIRECT_URL = 'workspace'
 
 TEMPLATES = [
     {
