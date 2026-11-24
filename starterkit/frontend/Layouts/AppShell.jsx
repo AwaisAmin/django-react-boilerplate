@@ -1,6 +1,6 @@
 import * as React from "react"
 import { router, usePage } from "@inertiajs/react"
-import { House, LayoutDashboard, Shield, Users } from "lucide-react"
+import { FilePlus2, House, LayoutDashboard, ListChecks, Shield, Users } from "lucide-react"
 import { toast } from "sonner"
 import { SidebarInset, SidebarProvider } from "@/Components/ui/sidebar"
 import { Toaster } from "@/Components/ui/sonner"
@@ -15,6 +15,8 @@ import { isActivePath } from "@/lib/route"
 
 const NAV_ICONS = {
   home: House,
+  requests: ListChecks,
+  new: FilePlus2,
   dashboard: LayoutDashboard,
   users: Users,
   groups: Shield,
@@ -46,7 +48,7 @@ export function AppShell({ root, breadcrumbs = [], children }) {
 
   const navItems = React.useMemo(
     () =>
-      [...(props.workspace_nav ?? []), ...(props.admin_nav ?? [])].map((item) => {
+      [...(props.workspace_nav ?? []), ...(props.budget_nav ?? []), ...(props.admin_nav ?? [])].map((item) => {
         const href = route(item.route)
         return {
           section: item.section,
@@ -56,7 +58,7 @@ export function AppShell({ root, breadcrumbs = [], children }) {
           active: isActivePath(url, href, { exact: EXACT_MATCH_ROUTES.includes(item.route) }),
         }
       }),
-    [props.workspace_nav, props.admin_nav, route, url]
+    [props.workspace_nav, props.budget_nav, props.admin_nav, route, url]
   )
 
   const resolvedBreadcrumbs = React.useMemo(

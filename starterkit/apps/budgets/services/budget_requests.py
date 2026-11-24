@@ -25,6 +25,7 @@ from apps.budgets.dto.budget_requests import (
     ReviewInputDTO,
 )
 from apps.budgets.selectors import budget_requests as selectors
+from apps.budgets.services import client_pages, presenters
 from apps.budgets.services.validation import clean_request_input, clean_review_input
 from apps.users.selectors.roles import role_for_user
 from shared.services import ensure_allowed
@@ -38,7 +39,8 @@ def create_request(*, actor: AbstractBaseUser, data: BudgetRequestInputDTO) -> B
 
     clean, errors = clean_request_input(data)
     if errors:
-        return _failure(errors)
+        props = client_pages.create_form_props(form=presenters.form_from_input(data), errors=errors)
+        return _failure(errors, page_props=props)
 
     request = BudgetRequest.objects.create(
         requester=actor, title=clean.title, amount=clean.amount, justification=clean.justification
@@ -56,9 +58,10 @@ def update_request(
         request = _get_visible_for_update(actor, role, request_id)
         _ensure_owner_may_change(actor, role, request)
         if not request.is_pending:
-            return _failure({"non_field_errors": [ALREADY_REVIEWED_ERROR]}, request_id)
+            errors = {"non_field_errors": [ALREADY_REVIEWED_ERROR]}
         if errors:
-            return _failure(errors, request_id)
+            props = client_pages.edit_form_props(request, form=presenters.form_from_input(data), errors=errors)
+            return _failure(errors, request_id, page_props=props)
 
         request.title = clean.title
         request.amount = clean.amount
@@ -149,5 +152,7 @@ def _success(request: BudgetRequest | None, message: str) -> BudgetRequestResult
     )
 
 
-def _failure(errors: dict, request_id: int | None = None) -> BudgetRequestResultDTO:
-    return BudgetRequestResultDTO(success=False, request_id=request_id, message="", errors=errors)
+def _failure(errors: dict, request_id: int | None = None, *, page_props: dict | None = None) -> BudgetRequestResultDTO:
+    return BudgetRequestResultDTO(
+        success=False, request_id=request_id, message="", errors=errors, page_props=page_props
+    )
