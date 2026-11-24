@@ -1,9 +1,18 @@
+from decimal import Decimal
+
 from django.contrib.auth.models import AbstractBaseUser
 
 from apps.budgets.domain import policies
 from apps.budgets.domain.models import BudgetRequest
 from apps.budgets.dto.budget_requests import BudgetRequestInputDTO
 from apps.users.selectors.roles import Role
+
+
+CENTS = Decimal("0.01")
+
+
+def money(value: Decimal) -> str:
+    return str(Decimal(value).quantize(CENTS))
 
 
 def display_name(user: AbstractBaseUser | None) -> str | None:

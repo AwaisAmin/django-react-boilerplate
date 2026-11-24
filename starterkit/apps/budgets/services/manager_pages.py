@@ -30,7 +30,7 @@ def get_review_queue_page(*, actor: AbstractBaseUser, query: ListQueryDTO, tab: 
             "pending": totals["pending_count"],
             "history": totals["approved_count"] + totals["rejected_count"],
         },
-        "pending_amount": str(totals["pending_amount"]),
+        "pending_amount": presenters.money(totals["pending_amount"]),
     }
 
 

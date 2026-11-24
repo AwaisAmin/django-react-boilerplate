@@ -20,6 +20,8 @@ EXPOSED_ROUTE_NAMES = (
     "budget_request_withdraw",
     "budget_review_queue",
     "budget_review",
+    "budget_overview",
+    "budget_request_delete",
     "admin_dashboard",
     "admin_users",
     "admin_user_create",

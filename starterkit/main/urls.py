@@ -36,6 +36,7 @@ from apps.users.api.role_views import user_role
 from apps.users.api.workspace_views import workspace
 from apps.budgets.api.client_views import my_requests, request_create, request_edit, request_withdraw
 from apps.budgets.api.manager_views import review, review_queue
+from apps.budgets.api.admin_views import overview, request_delete
 
 handler403 = "main.views.permission_denied"
 handler404 = "main.views.page_not_found"
@@ -50,6 +51,8 @@ urlpatterns = [
     path("budget/my-requests/<int:request_id>/withdraw/", request_withdraw, name="budget_request_withdraw"),
     path("budget/review/", review_queue, name="budget_review_queue"),
     path("budget/review/<int:request_id>/", review, name="budget_review"),
+    path("budget/overview/", overview, name="budget_overview"),
+    path("budget/overview/<int:request_id>/delete/", request_delete, name="budget_request_delete"),
     # Inertia-powered admin
     path("admin/login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
