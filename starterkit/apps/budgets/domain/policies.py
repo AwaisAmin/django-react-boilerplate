@@ -1,21 +1,7 @@
-"""
-Who may do what with budget requests.
-
-Policies are pure functions of the actor's role (resolved by the users app)
-and, where it matters, the request itself. Services call them and raise
-PermissionDenied; React only receives the resulting `can` flags.
-
-    Client   creates requests; sees, edits and withdraws only their own, only while pending
-    Manager  sees every request; approves or rejects pending ones
-    Admin    sees every request and the totals; the only role that may delete
-"""
-
 from django.contrib.auth.models import AbstractBaseUser
 
 from apps.budgets.domain.models import BudgetRequest
 from apps.users.selectors.roles import Role
-
-# Listing
 
 
 def can_create(role: Role | None) -> bool:
@@ -31,11 +17,7 @@ def can_view_review_queue(role: Role | None) -> bool:
 
 
 def can_view_all_requests(role: Role | None) -> bool:
-    """Organization-wide list with totals (admin overview)."""
     return role == Role.ADMIN
-
-
-# A single request
 
 
 def _is_owner(actor: AbstractBaseUser, request: BudgetRequest) -> bool:
@@ -49,7 +31,6 @@ def can_view(actor: AbstractBaseUser, role: Role | None, request: BudgetRequest)
 
 
 def can_edit(actor: AbstractBaseUser, role: Role | None, request: BudgetRequest) -> bool:
-    """Clients may change their own request until someone acts on it."""
     return role == Role.CLIENT and _is_owner(actor, request) and request.is_pending
 
 
@@ -58,7 +39,6 @@ def can_withdraw(actor: AbstractBaseUser, role: Role | None, request: BudgetRequ
 
 
 def can_review(role: Role | None, request: BudgetRequest) -> bool:
-    """Decisions are final: only pending requests can be approved or rejected."""
     return role == Role.MANAGER and request.is_pending
 
 

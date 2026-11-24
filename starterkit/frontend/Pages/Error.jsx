@@ -2,7 +2,6 @@ import { Head, Link, usePage } from "@inertiajs/react"
 import { Button } from "@/Components/ui/button"
 import { useRoute } from "@/composables/useRoute"
 
-/** Rendered by Django's handler403 and handler404 (main/views.py). */
 export default function Error({ status, title, message }) {
   const route = useRoute()
   const { auth } = usePage().props

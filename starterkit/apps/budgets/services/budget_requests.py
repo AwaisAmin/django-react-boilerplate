@@ -1,17 +1,3 @@
-"""
-Budget request workflow: every state change goes through here.
-
-Each mutation resolves the actor's role, checks a policy and then changes state.
-Changes to an existing request run in a transaction with the row locked, so two
-people acting at once (e.g. two managers reviewing the same request) cannot both
-succeed: the second one sees the new status and gets a clear error.
-
-Failures are reported in two ways:
-- PermissionDenied (403) / Http404: the actor may not do this at all.
-- A result with errors: the action is allowed in principle but the input is
-  invalid or the request has moved on (e.g. it was already reviewed).
-"""
-
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import transaction
 from django.http import Http404
@@ -87,14 +73,12 @@ def review_request(
     *, actor: AbstractBaseUser, request_id: int, data: ReviewInputDTO
 ) -> BudgetRequestResultDTO:
     role = role_for_user(actor)
-    # Checked before loading the request, so non-managers learn nothing about it.
     ensure_allowed(policies.can_view_review_queue(role))
     clean, errors = clean_review_input(data)
 
     with transaction.atomic():
         request = _get_for_update_or_404(request_id)
         if not policies.can_review(role, request):
-            # The actor is a manager, so the only reason is that it was already decided.
             return _failure({"non_field_errors": [NOT_PENDING_ERROR]}, request_id)
         if errors:
             return _failure(errors, request_id)
@@ -116,9 +100,6 @@ def delete_request(*, actor: AbstractBaseUser, request_id: int) -> BudgetRequest
     return _success(None, f'Request "{title}" was permanently deleted.')
 
 
-# Helpers
-
-
 def _get_for_update_or_404(request_id: int) -> BudgetRequest:
     request = selectors.budget_request_get_for_update(request_id)
     if request is None:
@@ -127,10 +108,6 @@ def _get_for_update_or_404(request_id: int) -> BudgetRequest:
 
 
 def _get_visible_for_update(actor, role, request_id: int) -> BudgetRequest:
-    """
-    Requests the actor may not see are reported as missing (404), so a client
-    cannot discover which request ids belong to other people.
-    """
     request = _get_for_update_or_404(request_id)
     if not policies.can_view(actor, role, request):
         raise Http404("Budget request not found.")
@@ -138,10 +115,6 @@ def _get_visible_for_update(actor, role, request_id: int) -> BudgetRequest:
 
 
 def _ensure_owner_may_change(actor, role, request: BudgetRequest) -> None:
-    """
-    Only the owning client may change a request. Whether it is still pending is
-    checked separately, so the owner gets a helpful message instead of a 403.
-    """
     is_owning_client = policies.can_view_own_requests(role) and request.requester_id == actor.pk
     ensure_allowed(is_owning_client)
 

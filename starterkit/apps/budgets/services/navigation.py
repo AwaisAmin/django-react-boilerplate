@@ -5,7 +5,6 @@ from apps.users.selectors.roles import role_for_user
 
 
 def get_budget_navigation(*, actor: AbstractBaseUser | AnonymousUser) -> list[dict]:
-    """Sidebar entries for budget pages the actor may open (see get_admin_navigation)."""
     role = role_for_user(actor)
     items = []
     if policies.can_view_own_requests(role):

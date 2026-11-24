@@ -22,7 +22,6 @@ const NAV_ICONS = {
   groups: Shield,
 }
 
-// Landing pages whose path prefixes other pages.
 const EXACT_MATCH_ROUTES = ["workspace", "admin_dashboard"]
 
 const TOASTS = {
@@ -31,13 +30,6 @@ const TOASTS = {
   warning: toast.warning,
 }
 
-/**
- * Application shell (shadcn "sidebar inset" layout) shared by AdminLayout and
- * WorkspaceLayout. Navigation comes from Django and only lists what the user may open.
- *
- * `root` is { label, route, subtitle }, the section's landing page.
- * `breadcrumbs` are { label, route?, params? }; the last entry is the current page.
- */
 export function AppShell({ root, breadcrumbs = [], children }) {
   const { props, url } = usePage()
   const route = useRoute()

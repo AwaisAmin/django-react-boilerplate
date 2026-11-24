@@ -74,7 +74,6 @@ class ErrorPageTests(TestCase):
         self.assertEqual(response["X-Inertia"], "true")
         self.assertEqual(response.json()["component"], "Error")
 
-        # A direct visit gets a full HTML document, not bare JSON.
         response = self.client.get("/admin/users/")
         self.assertContains(response, "Access denied", status_code=403, html=False)
 

@@ -13,7 +13,6 @@ ROLE_DESCRIPTIONS = {
 
 
 def get_workspace_page(*, actor: AbstractBaseUser) -> dict:
-    """Landing page after sign-in, for every role."""
     role = role_for_user(actor)
     ensure_allowed(policies.can_access_workspace(role))
     return {
@@ -24,7 +23,6 @@ def get_workspace_page(*, actor: AbstractBaseUser) -> dict:
 
 
 def get_workspace_navigation(*, actor: AbstractBaseUser | AnonymousUser) -> list[dict]:
-    """Sidebar entries available to every signed-in user (see get_admin_navigation)."""
     if not policies.can_access_workspace(role_for_user(actor)):
         return []
     return [{"section": "Workspace", "label": "Home", "icon": "home", "route": "workspace"}]

@@ -9,7 +9,6 @@ const STYLES = {
   WITHDRAWN: { icon: CircleSlash, className: "text-muted-foreground" },
 }
 
-/** Status of a budget request. `label` comes from Django. */
 export function StatusBadge({ status, label }) {
   const { icon: Icon, className } = STYLES[status] ?? STYLES.WITHDRAWN
   return (

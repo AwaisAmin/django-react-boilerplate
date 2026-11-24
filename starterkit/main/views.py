@@ -26,7 +26,6 @@ def page_not_found(request: HttpRequest, exception=None):
 
 
 def _error_page(request: HttpRequest, *, status: int, title: str, message: str):
-    # Exception text is not shown: it can reveal which records exist.
     response = render(request, "Error", {"status": status, "title": title, "message": message})
     response.status_code = status
     return response

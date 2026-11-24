@@ -1,5 +1,3 @@
-"""Turn budget requests into page props. The `can` flags come from policies, never from React."""
-
 from django.contrib.auth.models import AbstractBaseUser
 
 from apps.budgets.domain import policies
@@ -18,7 +16,6 @@ def request_props(actor: AbstractBaseUser, role: Role | None, request: BudgetReq
     return {
         "id": request.pk,
         "title": request.title,
-        # A string keeps the exact Decimal value; JSON numbers are floats.
         "amount": str(request.amount),
         "justification": request.justification,
         "status": request.status,
@@ -46,5 +43,4 @@ def form_from_request(request: BudgetRequest) -> dict:
 
 
 def form_from_input(data: BudgetRequestInputDTO) -> dict:
-    # Echo what the user typed so a failed submit keeps their input.
     return {"title": data.title, "amount": data.amount, "justification": data.justification}

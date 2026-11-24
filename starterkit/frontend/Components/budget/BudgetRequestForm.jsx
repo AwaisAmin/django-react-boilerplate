@@ -9,10 +9,6 @@ import { cn } from "@/lib/utils"
 
 const invalid = (errors, field) => (errors[field]?.length ? "border-destructive focus-visible:ring-destructive" : undefined)
 
-/**
- * Presentational budget request form shared by the create and edit pages.
- * The page owns the form state (Inertia useForm); Django validates on submit.
- */
 export function BudgetRequestForm({ data, setData, errors = {}, processing, disabled = false, onSubmit, cancelHref, submitLabel }) {
   const handleSubmit = (e) => {
     e.preventDefault()

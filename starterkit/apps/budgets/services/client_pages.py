@@ -1,5 +1,3 @@
-"""Page props for the client's screens: My Requests, new request and edit request."""
-
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
@@ -39,11 +37,7 @@ def get_edit_page(*, actor: AbstractBaseUser, request_id: int) -> dict:
     return edit_form_props(request, form=presenters.form_from_request(request), errors={})
 
 
-# Shared with the mutation services, which re-render these pages on failure.
-
-
 def get_own_request(actor: AbstractBaseUser, request_id: int) -> BudgetRequest:
-    """The actor's own request: 404 if it is not theirs to see, 403 if they are not its client."""
     role = role_for_user(actor)
     request = selectors.budget_request_get(request_id)
     if request is None or not policies.can_view(actor, role, request):

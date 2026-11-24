@@ -16,7 +16,6 @@ def _parse_request_form(request: HttpRequest) -> BudgetRequestInputDTO:
     amount = data.get("amount")
     return BudgetRequestInputDTO(
         title=parse_str(data.get("title")),
-        # JSON may carry a number; keep it as text so the service parses it as Decimal.
         amount=str(amount) if isinstance(amount, (int, float)) and not isinstance(amount, bool) else parse_str(amount),
         justification=parse_str(data.get("justification")),
     )

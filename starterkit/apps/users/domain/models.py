@@ -12,7 +12,6 @@ class UserProfile(models.Model):
 
     class Meta:
         constraints = [
-            # `choices` is only checked by forms and full_clean(); enforce it in the database too.
             models.CheckConstraint(
                 condition=models.Q(role__in=Role.values), name="users_profile_role_valid"
             ),

@@ -46,7 +46,6 @@ def _get_user_or_404(user_id: int) -> User:
 
 
 def _current_role(user: User) -> str:
-    # Inactive users have no effective role, but their stored one can still be edited.
     if policies.has_fixed_role(user):
         return Role.ADMIN.value
     return role_selectors.stored_role(user) or DEFAULT_ROLE.value

@@ -9,15 +9,12 @@ class Status(models.TextChoices):
     PENDING = "PENDING", "Pending"
     APPROVED = "APPROVED", "Approved"
     REJECTED = "REJECTED", "Rejected"
-    # Not in the brief: lets a client take back a request without deleting it,
-    # because permanent deletion is reserved for admins.
     WITHDRAWN = "WITHDRAWN", "Withdrawn"
 
 
-# A manager's decision; withdrawal is the client's.
 REVIEW_OUTCOMES = (Status.APPROVED, Status.REJECTED)
 
-MAX_AMOUNT = Decimal("9999999999.99")  # Fits max_digits=12, decimal_places=2.
+MAX_AMOUNT = Decimal("9999999999.99")
 
 
 class BudgetRequest(models.Model):
@@ -29,7 +26,6 @@ class BudgetRequest(models.Model):
     requester = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="budget_requests"
     )
-    # Kept when the reviewer's account is deleted; the decision itself stays.
     reviewer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -46,17 +42,14 @@ class BudgetRequest(models.Model):
     class Meta:
         ordering = ["-created_at", "-pk"]
         indexes = [models.Index(fields=["status", "created_at"])]
-        # The database guards the rules even if application code is bypassed.
         constraints = [
             models.CheckConstraint(condition=Q(amount__gt=0), name="budget_amount_positive"),
             models.CheckConstraint(condition=Q(status__in=Status.values), name="budget_status_valid"),
-            # Reviewed exactly when approved or rejected.
             models.CheckConstraint(
                 condition=Q(status__in=REVIEW_OUTCOMES, reviewed_at__isnull=False)
                 | (~Q(status__in=REVIEW_OUTCOMES) & Q(reviewed_at__isnull=True)),
                 name="budget_reviewed_at_matches_status",
             ),
-            # A rejection must explain itself.
             models.CheckConstraint(
                 condition=~Q(status=Status.REJECTED) | ~Q(review_note=""),
                 name="budget_rejection_has_note",

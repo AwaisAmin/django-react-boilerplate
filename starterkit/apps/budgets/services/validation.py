@@ -1,5 +1,3 @@
-"""Input validation for budget request forms. Pure functions: no database access."""
-
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 

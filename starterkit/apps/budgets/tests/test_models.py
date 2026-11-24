@@ -29,7 +29,7 @@ class BudgetRequestConstraintTests(TestCase):
 
     def test_rejection_requires_a_note(self):
         self.assert_rejected_by_database(status=Status.REJECTED, review_note="")
-        make_request(self.client_user, status=Status.APPROVED, review_note="")  # Optional when approving.
+        make_request(self.client_user, status=Status.APPROVED, review_note="")
 
     def test_reviewed_at_matches_status(self):
         self.assert_rejected_by_database(status=Status.APPROVED, reviewed_at=None)

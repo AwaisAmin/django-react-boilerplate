@@ -3,8 +3,6 @@ from decimal import Decimal
 from django.utils import timezone
 
 from apps.budgets.domain.models import REVIEW_OUTCOMES, BudgetRequest, Status
-
-# Test-only helpers may build users through the users app's factories.
 from apps.users.tests.factories import make_superuser, make_user  # noqa: F401
 
 

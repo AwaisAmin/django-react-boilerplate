@@ -8,7 +8,6 @@ STRONG_PASSWORD = "c0rrect-Horse-battery"
 
 
 def make_user(username: str, *, role: str | None = None, **fields):
-    """Create a user; `role=None` leaves the account without a profile."""
     user = User.objects.create_user(username=username, password=STRONG_PASSWORD, **fields)
     if role is not None:
         UserProfile.objects.create(user=user, role=role)

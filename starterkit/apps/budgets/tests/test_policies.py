@@ -48,7 +48,6 @@ class RequestPolicyTests(TestCase):
                 self.assertFalse(check(self.other, Role.CLIENT, self.pending))
                 for request in self.decided.values():
                     self.assertFalse(check(self.owner, Role.CLIENT, request))
-                # Not even a manager or admin may edit a client's request.
                 self.assertFalse(check(self.owner, Role.MANAGER, self.pending))
                 self.assertFalse(check(self.owner, Role.ADMIN, self.pending))
 

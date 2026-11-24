@@ -16,7 +16,6 @@ UserLike = AbstractBaseUser | AnonymousUser
 
 
 def can_sign_in(user: UserLike) -> bool:
-    """Signing in grants no access by itself; every page checks its own policy."""
     return bool(getattr(user, "is_authenticated", False) and getattr(user, "is_active", False))
 
 
@@ -77,7 +76,6 @@ def can_delete_user(actor: UserLike, target: UserLike) -> bool:
 
 
 def can_assign_role(actor: UserLike, target: UserLike) -> bool:
-    """Whether to offer the role page; the users app enforces the rule itself."""
     return can_grant_privileges(actor) and not getattr(target, "is_superuser", False)
 
 
