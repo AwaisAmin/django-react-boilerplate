@@ -7,11 +7,15 @@ from apps.users.domain.roles import Role, UserLike, effective_role
 
 User = get_user_model()
 
-__all__ = ["Role", "role_for_user", "roles_for_users", "stored_role", "user_get"]
+__all__ = ["Role", "role_for_user", "roles_for_users", "stored_role", "user_get", "user_get_by_username"]
 
 
 def user_get(user_id: int) -> User | None:
     return User.objects.filter(pk=user_id).first()
+
+
+def user_get_by_username(username: str) -> User | None:
+    return User.objects.filter(username=username).first()
 
 
 def stored_role(user: UserLike) -> str | None:

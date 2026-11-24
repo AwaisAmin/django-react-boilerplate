@@ -23,6 +23,10 @@ def requests_for_requester(requester: AbstractBaseUser) -> QuerySet:
     return _with_people().filter(requester=requester)
 
 
+def request_exists_for(requester: AbstractBaseUser, title: str) -> bool:
+    return BudgetRequest.objects.filter(requester=requester, title=title).exists()
+
+
 def pending_requests() -> QuerySet:
     return _with_people().filter(status=Status.PENDING).order_by("created_at", "pk")
 
