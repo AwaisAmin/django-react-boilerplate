@@ -85,9 +85,9 @@ class BudgetNavigationTests(TestCase):
     def routes(self, actor):
         return [item["route"] for item in get_budget_navigation(actor=actor)]
 
-    def test_clients_see_their_pages_only(self):
+    def test_each_role_sees_its_own_pages(self):
         self.assertEqual(
             self.routes(make_user("client", role=Role.CLIENT)), ["budget_my_requests", "budget_request_create"]
         )
-        self.assertEqual(self.routes(make_user("manager", role=Role.MANAGER)), [])
+        self.assertEqual(self.routes(make_user("manager", role=Role.MANAGER)), ["budget_review_queue"])
         self.assertEqual(self.routes(AnonymousUser()), [])

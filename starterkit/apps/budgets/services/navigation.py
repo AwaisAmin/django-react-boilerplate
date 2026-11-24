@@ -11,4 +11,6 @@ def get_budget_navigation(*, actor: AbstractBaseUser | AnonymousUser) -> list[di
         items.append({"section": "Budget", "label": "My requests", "icon": "requests", "route": "budget_my_requests"})
     if policies.can_create(role):
         items.append({"section": "Budget", "label": "New request", "icon": "new", "route": "budget_request_create"})
+    if policies.can_view_review_queue(role):
+        items.append({"section": "Budget", "label": "Review queue", "icon": "review", "route": "budget_review_queue"})
     return items

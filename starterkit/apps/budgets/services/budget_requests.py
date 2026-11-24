@@ -11,7 +11,7 @@ from apps.budgets.dto.budget_requests import (
     ReviewInputDTO,
 )
 from apps.budgets.selectors import budget_requests as selectors
-from apps.budgets.services import client_pages, presenters
+from apps.budgets.services import client_pages, manager_pages, presenters
 from apps.budgets.services.validation import clean_request_input, clean_review_input
 from apps.users.selectors.roles import role_for_user
 from shared.services import ensure_allowed
@@ -79,9 +79,11 @@ def review_request(
     with transaction.atomic():
         request = _get_for_update_or_404(request_id)
         if not policies.can_review(role, request):
-            return _failure({"non_field_errors": [NOT_PENDING_ERROR]}, request_id)
+            errors = {"non_field_errors": [NOT_PENDING_ERROR]}
         if errors:
-            return _failure(errors, request_id)
+            form = {"decision": data.decision, "note": data.note}
+            props = manager_pages.review_page_props(actor, role, request, form=form, errors=errors)
+            return _failure(errors, request_id, page_props=props)
 
         request.status = clean.status
         request.review_note = clean.note

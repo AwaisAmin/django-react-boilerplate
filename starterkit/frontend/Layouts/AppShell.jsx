@@ -1,6 +1,6 @@
 import * as React from "react"
 import { router, usePage } from "@inertiajs/react"
-import { FilePlus2, House, LayoutDashboard, ListChecks, Shield, Users } from "lucide-react"
+import { ClipboardCheck, FilePlus2, House, LayoutDashboard, ListChecks, Shield, Users } from "lucide-react"
 import { toast } from "sonner"
 import { SidebarInset, SidebarProvider } from "@/Components/ui/sidebar"
 import { Toaster } from "@/Components/ui/sonner"
@@ -17,6 +17,7 @@ const NAV_ICONS = {
   home: House,
   requests: ListChecks,
   new: FilePlus2,
+  review: ClipboardCheck,
   dashboard: LayoutDashboard,
   users: Users,
   groups: Shield,
