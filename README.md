@@ -2,7 +2,9 @@
 
 An internal tool for submitting and approving budget requests. Clients submit requests, Managers approve or reject them, and Admins see the organization's totals and clean up records. It is built on a Django + Inertia.js + React starter kit: Django owns routing, authentication, permissions and validation, and React only renders the props it receives.
 
-**Walkthrough video:** _Loom link to be added_
+**Walkthrough videos (Loom):**
+- [Part 1](https://www.loom.com/share/9dd4131ca86241b4bf931d5556c888bb)
+- [Part 2](https://www.loom.com/share/44f5d954c74a40b3a5314a99d5cf0e5d)
 
 ## Roles
 
@@ -31,6 +33,30 @@ npm run dev
 ```
 
 Open **http://127.0.0.1:8000/admin/login/**. Do not open the Vite URL (`localhost:5173`): it serves assets only, and Django renders the pages.
+
+**Without uv**, use a regular virtual environment (on macOS/Linux, use `.venv/bin/` instead of `.venv/Scripts/`):
+
+```bash
+python -m venv .venv
+.venv/Scripts/python -m pip install "django>=6.0.1" "inertia-django>=1.2.0" "celery[redis]>=5.6.3" "django-celery-beat>=2.9.0"
+.venv/Scripts/python starterkit/manage.py migrate
+.venv/Scripts/python starterkit/manage.py seed_demo
+.venv/Scripts/python starterkit/manage.py runserver
+```
+
+### Configuration
+
+No environment variables are needed for local development. The defaults run in debug mode with SQLite at `starterkit/db.sqlite3`, and Redis is not required to use the budget workflow. The main variables are:
+
+| Variable | Default | Notes |
+|---|---|---|
+| `DJANGO_DEBUG` | `true` | Set to `false` in production. `seed_demo` only runs when it is `true`. |
+| `DJANGO_SECRET_KEY` | development key | Required when `DJANGO_DEBUG=false` |
+| `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma-separated |
+| `DJANGO_SQLITE_PATH` | `starterkit/db.sqlite3` | Database file |
+| `VITE_DEV_SERVER_URL` | `http://localhost:5173` | Change it if port 5173 is taken, and set the same value for both processes |
+
+The full list (security, login throttling, Redis and Celery) is in [docs/configuration.md](docs/configuration.md).
 
 ### Demo accounts
 
